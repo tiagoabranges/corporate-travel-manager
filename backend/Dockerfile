@@ -1,36 +1,32 @@
-FROM php:8.2-fpm
+FROM php:8.2-fpm-alpine
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
+# Dependências do sistema
+RUN apk add --no-cache \
+    bash \
     git \
+    unzip \
     curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    unzip
+    icu-dev \
+    oniguruma-dev \
+    libzip-dev \
+    zlib-dev \
+    mysql-client
 
-# Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+# Extensões PHP necessárias para Laravel + MySQL
+RUN docker-php-ext-install \
+    pdo \
+    pdo_mysql \
+    intl \
+    mbstring \
+    zip
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+# Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Get latest Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Set working directory
 WORKDIR /var/www
 
-# Copy existing application directory contents
-COPY . /var/www
+# (Opcional) Permissões para storage/cache
+RUN addgroup -g 1000 app && adduser -G app -g app -s /bin/sh -D app -u 1000 \
+  && chown -R app:app /var/www
 
-# Install dependencies
-RUN composer install --no-interaction --optimize-autoloader --no-dev
-
-# Set permissions
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
-
-# Expose port 9000 and start php-fpm server
-EXPOSE 9000
-CMD ["php-fpm"]
+USER app

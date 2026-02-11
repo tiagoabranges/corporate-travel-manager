@@ -1,0 +1,45 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: corporate_travel_mysql
+    environment:
+      MYSQL_DATABASE: travel_management
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    build:
+      context: ./backend
+    container_name: corporate_travel_backend
+    working_dir: /var/www
+    volumes:
+      - ./backend:/var/www
+    ports:
+      - "8000:8000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    command: sh -lc "composer install && php artisan serve --host=0.0.0.0 --port=8000"
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: corporate_travel_frontend
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    command: sh -lc "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
+
+volumes:
+  mysql_data:
