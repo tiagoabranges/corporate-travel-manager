@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Exceptions;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
@@ -27,4 +28,22 @@ class Handler extends ExceptionHandler
             //
         });
     }
-}
+    public function render($request, Throwable $e)
+    {
+        if ($request->is('api/*')) {
+
+            $status = 500;
+
+            if ($e instanceof HttpExceptionInterface) {
+                $status = $e->getStatusCode();
+            }
+
+            return response()->json([
+                'error' => true,
+                'message' => $e->getMessage() ?: 'Erro interno'
+            ], $status);
+        }
+
+        return parent::render($request, $e);
+    }
+}   

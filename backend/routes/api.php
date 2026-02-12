@@ -18,3 +18,9 @@ Route::patch(
     'travel-orders/{id}/status',
     [TravelOrderController::class, 'updateStatus']
 );
+Route::fallback(function () {
+    return response()->json([
+        'error' => true,
+        'message' => 'Rota não encontrada'
+    ], 404);
+});
