@@ -7,9 +7,10 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateStatusRequest extends FormRequest
 {
     public function authorize(): bool
-    {
-        return auth()->check() && auth()->user()->isAdmin();
-    }
+{
+    return true;
+}
+
 
     public function rules(): array
     {

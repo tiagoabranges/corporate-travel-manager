@@ -68,6 +68,8 @@ class TravelOrderController extends Controller
 
     public function updateStatus(UpdateStatusRequest $request, $id)
     {
+        \Log::info('ENTROU NO updateStatus');
+            
         $order = TravelOrder::findOrFail($id);
 
         if (auth()->user()->role !== 'admin') {
