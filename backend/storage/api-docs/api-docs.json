@@ -136,6 +136,175 @@
                     }
                 ]
             }
+        },
+        "/travel-orders": {
+            "get": {
+                "tags": [
+                    "TravelOrders"
+                ],
+                "summary": "Listar pedidos de viagem",
+                "operationId": "5afa5082a060eebf9b85e29ea5ea0c6a",
+                "responses": {
+                    "200": {
+                        "description": "Lista de pedidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "TravelOrders"
+                ],
+                "summary": "Criar pedido de viagem",
+                "operationId": "3c6f3eac075e217221019dcd1945c0d3",
+                "requestBody": {
+                    "content": {
+                        "application/json": {}
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Pedido criado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/travel-orders/{id}": {
+            "get": {
+                "tags": [
+                    "TravelOrders"
+                ],
+                "summary": "Mostrar pedido",
+                "operationId": "71a313f58ac32d47e8ba27afd9b99adb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do pedido"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "TravelOrders"
+                ],
+                "summary": "Atualizar pedido",
+                "operationId": "369ede4c0d8316bd5c185e16dc16d0fb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {}
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Pedido atualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "TravelOrders"
+                ],
+                "summary": "Remover pedido",
+                "operationId": "5539a6a63382fc51ed2efcb03c98ded6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pedido removido"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/travel-orders/{id}/status": {
+            "patch": {
+                "tags": [
+                    "TravelOrders"
+                ],
+                "summary": "Atualizar status do pedido",
+                "operationId": "f023022f342c5cb79ee937cece017c25",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {}
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Status atualizado"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -151,6 +320,10 @@
         {
             "name": "Auth",
             "description": "Auth"
+        },
+        {
+            "name": "TravelOrders",
+            "description": "TravelOrders"
         }
     ]
 }
