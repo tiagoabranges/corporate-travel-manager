@@ -2,44 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\TravelOrder;
+use Illuminate\Http\Request;
+
 
 class TravelOrderController extends Controller
 {
-    /**
-     * Listar pedidos
-     */
-    public function index()
+    public function index(Request $request)
     {
-        $orders = TravelOrder::all();
+        $orders = TravelOrder::query()
+            ->filters($request->all())
+            ->latest()
+            ->paginate(10);
 
         return response()->json($orders);
     }
 
-    /**
-     * Criar pedido
-     */
-public function store(Request $request)
-{
-    $validated = $request->validate([
-        'requester_name' => 'required|string',
-        'destination' => 'required|string',
-        'departure_date' => 'required|date',
-        'return_date' => 'required|date|after_or_equal:departure_date',
-        'user_id' => 'required|exists:users,id',
-    ]);
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'requester_name' => 'required|string',
+            'destination' => 'required|string',
+            'departure_date' => 'required|date',
+            'return_date' => 'required|date',
+            'status' => 'required|string'
+        ]);
 
-    $order = TravelOrder::create($validated);
+        $data['user_id'] = auth()->id();
 
-    return response()->json([
-        'message' => 'Travel order created successfully',
-        'data' => $order
-    ], 201);
-}
-    /**
-     * Buscar pedido por ID
-     */
+        $order = TravelOrder::create($data);
+
+        return response()->json($order, 201);
+    }
+
     public function show($id)
     {
         $order = TravelOrder::findOrFail($id);
@@ -47,30 +42,28 @@ public function store(Request $request)
         return response()->json($order);
     }
 
-    /**
-     * Atualizar status
-     */
-    public function updateStatus(Request $request, $id)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'status' => 'required|in:approved,canceled'
-        ]);
-
         $order = TravelOrder::findOrFail($id);
 
-        // Regra de negócio
-        if ($order->status === 'approved' && $request->status === 'canceled') {
-            return response()->json([
-                'message' => 'Approved orders cannot be canceled'
-            ], 422);
-        }
-
-        $order->status = $request->status;
-        $order->save();
-
-        return response()->json([
-            'message' => 'Status updated successfully',
-            'data' => $order
+        $data = $request->validate([
+            'requester_name' => 'sometimes|string',
+            'destination' => 'sometimes|string',
+            'departure_date' => 'sometimes|date',
+            'return_date' => 'sometimes|date',
+            'status' => 'sometimes|string'
         ]);
+
+        $order->update($data);
+
+        return response()->json($order);
+    }
+
+    public function destroy($id)
+    {
+        $order = TravelOrder::findOrFail($id);
+        $order->delete();
+
+        return response()->json(['message' => 'Deleted']);
     }
 }
