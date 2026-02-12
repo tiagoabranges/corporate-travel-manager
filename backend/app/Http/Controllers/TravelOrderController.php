@@ -15,11 +15,17 @@ class TravelOrderController extends Controller
 {
     public function index(Request $request)
     {
-        $orders = TravelOrder::query()
-            ->where('user_id', auth()->id())
+        $query = TravelOrder::query();
+
+        if (!auth()->user()->isAdmin()) {
+            $query->where('user_id', auth()->id());
+        }
+
+        $orders = $query
             ->filters($request->all())
             ->latest()
             ->paginate(10);
+
 
         return ApiResponse::success($orders);
     }

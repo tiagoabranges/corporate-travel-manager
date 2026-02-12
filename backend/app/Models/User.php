@@ -36,10 +36,10 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(TravelOrder::class);
     }
 
-    public function isAdmin()
-    {
-        return $this->role === 'admin';
-    }
+public function isAdmin(): bool
+{
+    return $this->role === 'admin';
+}
 
 
     public function getJWTIdentifier()
