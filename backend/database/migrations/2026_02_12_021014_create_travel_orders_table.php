@@ -9,19 +9,21 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
- public function up(): void
-{
-    Schema::create('travel_orders', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-        $table->string('requester_name');
-        $table->string('destination');
-        $table->date('departure_date');
-        $table->date('return_date');
-        $table->string('status')->default('requested');
-        $table->timestamps();
-    });
-}
+    public function up(): void
+    {
+        Schema::create('travel_orders', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('requester_name');
+            $table->string('destination')->index();
+            $table->date('departure_date')->index();
+            $table->date('return_date')->index();
+            $table->enum('status', ['requested', 'approved', 'cancelled'])
+                ->default('requested')
+                ->index();
+            $table->timestamps();
+        });
+    }
     /**
      * Reverse the migrations.
      */
