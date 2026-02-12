@@ -13,3 +13,8 @@ Full Stack application for managing corporate travel requests.
 ## Status
 
 🚧 Project initialization phase
+# Setup after clone
+
+docker compose up -d --build
+docker compose exec backend php artisan key:generate
+docker compose exec backend php artisan migrate
