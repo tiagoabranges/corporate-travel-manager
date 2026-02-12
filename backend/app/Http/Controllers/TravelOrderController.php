@@ -66,7 +66,6 @@ class TravelOrderController extends Controller
 
         if (auth()->user()->role !== 'admin') {
             return ApiResponse::error('Apenas administradores podem alterar status', StatusCode::FORBIDDEN);
-        
         }
 
         if ($order->status === 'approved' && $request->status === 'cancelled') {
@@ -77,9 +76,12 @@ class TravelOrderController extends Controller
             'status' => $request->status
         ]);
 
-        $order->user->notify(
-            new TravelOrderStatusNotification($order)
-        );
+        if ($order->user) {
+            $order->user->notify(
+                new TravelOrderStatusNotification($order)
+            );
+        }
+
 
         return ApiResponse::success($order);
     }

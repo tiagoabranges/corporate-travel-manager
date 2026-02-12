@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Exceptions;
+
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -37,13 +38,18 @@ class Handler extends ExceptionHandler
             if ($e instanceof HttpExceptionInterface) {
                 $status = $e->getStatusCode();
             }
+            $message = 'Erro interno';
+
+            if ($e instanceof HttpExceptionInterface) {
+                $message = $e->getMessage() ?: $message;
+            }
 
             return response()->json([
                 'error' => true,
-                'message' => $e->getMessage() ?: 'Erro interno'
+                'message' => $message
             ], $status);
         }
 
         return parent::render($request, $e);
     }
-}   
+}
