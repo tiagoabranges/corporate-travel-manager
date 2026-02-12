@@ -8,7 +8,7 @@ class StoreTravelOrderRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return auth()->check(); // usuário precisa estar logado
+        return auth()->check(); 
     }
 
     public function rules(): array
