@@ -8,6 +8,9 @@ use App\Http\Requests\StoreTravelOrderRequest;
 use App\Http\Requests\UpdateStatusRequest;
 use App\Notifications\TravelOrderStatusNotification;
 
+use App\Support\ApiResponse;
+use App\Support\StatusCode;
+
 class TravelOrderController extends Controller
 {
     public function index(Request $request)
@@ -18,7 +21,7 @@ class TravelOrderController extends Controller
             ->latest()
             ->paginate(10);
 
-        return response()->json($orders);
+        return ApiResponse::success($orders);
     }
 
     public function store(StoreTravelOrderRequest $request)
@@ -29,7 +32,7 @@ class TravelOrderController extends Controller
 
         $order = TravelOrder::create($data);
 
-        return response()->json($order, 201);
+        return ApiResponse::success($order, 'Pedido criado', StatusCode::CREATED);
     }
 
     public function show($id)
@@ -37,7 +40,7 @@ class TravelOrderController extends Controller
         $order = TravelOrder::where('user_id', auth()->id())
             ->findOrFail($id);
 
-        return response()->json($order);
+        return ApiResponse::success($order);
     }
 
     public function update(Request $request, $id)
@@ -54,7 +57,7 @@ class TravelOrderController extends Controller
 
         $order->update($data);
 
-        return response()->json($order);
+        return ApiResponse::success($order);
     }
 
     public function updateStatus(UpdateStatusRequest $request, $id)
@@ -62,15 +65,12 @@ class TravelOrderController extends Controller
         $order = TravelOrder::findOrFail($id);
 
         if (auth()->user()->role !== 'admin') {
-            return response()->json([
-                'message' => 'Apenas administradores podem alterar status'
-            ], 403);
+            return ApiResponse::error('Apenas administradores podem alterar status', StatusCode::FORBIDDEN);
+        
         }
 
         if ($order->status === 'approved' && $request->status === 'cancelled') {
-            return response()->json([
-                'message' => 'Pedido já aprovado não pode ser cancelado'
-            ], 422);
+            return ApiResponse::error('Pedido já aprovado não pode ser cancelado', StatusCode::UNPROCESSABLE_ENTITY);
         }
 
         $order->update([
@@ -81,7 +81,7 @@ class TravelOrderController extends Controller
             new TravelOrderStatusNotification($order)
         );
 
-        return response()->json($order);
+        return ApiResponse::success($order);
     }
 
     public function destroy($id)
@@ -91,8 +91,6 @@ class TravelOrderController extends Controller
 
         $order->delete();
 
-        return response()->json([
-            'message' => 'Pedido removido com sucesso'
-        ]);
+        return ApiResponse::success([], 'Pedido removido com sucesso');
     }
 }

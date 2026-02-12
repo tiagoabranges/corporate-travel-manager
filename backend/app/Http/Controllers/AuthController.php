@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Support\ApiResponse;
+use App\Support\StatusCode;
 
 class AuthController extends Controller
 {
@@ -17,41 +19,43 @@ class AuthController extends Controller
         ]);
 
         if (!$token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return ApiResponse::error('Unauthorized', StatusCode::UNAUTHORIZED);
         }
 
-        return response()->json([
+        return ApiResponse::success([
             'token' => $token,
             'user' => auth()->user()
         ]);
     }
 
-    public function register(Request $request)
-    {
-        $data = $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6'
-        ]);
+public function register(Request $request)
+{
+    $data = $request->validate([
+        'name' => 'required|string',
+        'email' => 'required|email|unique:users',
+        'password' => 'required|min:6'
+    ]);
 
-        $data['password'] = Hash::make($data['password']);
+    $data['password'] = Hash::make($data['password']);
 
-        $user = User::create($data);
+    $user = User::create($data);
 
-        return response()->json($user, 201);
-    }
+    return ApiResponse::success(
+        $user,
+        'Usuário criado',
+        StatusCode::CREATED
+    );
+}
 
     public function me()
     {
-        return response()->json(auth()->user());
+        return ApiResponse::success(auth()->user());
     }
 
     public function logout()
     {
         auth()->logout();
 
-        return response()->json([
-            'message' => 'Logout realizado'
-        ]);
+        return ApiResponse::success([], 'Logout realizado');
     }
 }
