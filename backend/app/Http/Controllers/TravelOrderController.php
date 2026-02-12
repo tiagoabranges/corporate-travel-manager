@@ -13,8 +13,25 @@ use App\Support\StatusCode;
 
 class TravelOrderController extends Controller
 {
+    /**
+     * @OA\Tag(
+     *   name="TravelOrders",
+     *   description="Gerenciamento de pedidos de viagem"
+     * )
+     */
+
+    /**
+     * @OA\Get(
+     *   path="/travel-orders",
+     *   summary="Listar pedidos de viagem",
+     *   tags={"TravelOrders"},
+     *   security={{"bearerAuth":{}}},
+     *   @OA\Response(response=200, description="Lista de pedidos")
+     * )
+     */
     public function index(Request $request)
     {
+
         $query = TravelOrder::query();
 
         if (!auth()->user()->isAdmin()) {
@@ -30,8 +47,19 @@ class TravelOrderController extends Controller
         return ApiResponse::success($orders);
     }
 
+    /**
+     * @OA\Post(
+     *   path="/travel-orders",
+     *   summary="Criar pedido de viagem",
+     *   tags={"TravelOrders"},
+     *   security={{"bearerAuth":{}}},
+     *   @OA\RequestBody(@OA\MediaType(mediaType="application/json")),
+     *   @OA\Response(response=201, description="Pedido criado")
+     * )
+     */
     public function store(StoreTravelOrderRequest $request)
     {
+
         $data = $request->validated();
         $data['user_id'] = auth()->id();
         $data['status'] = 'requested';
@@ -41,16 +69,40 @@ class TravelOrderController extends Controller
         return ApiResponse::success($order, 'Pedido criado', StatusCode::CREATED);
     }
 
+    /**
+     * @OA\Get(
+     *   path="/travel-orders/{id}",
+     *   summary="Mostrar pedido",
+     *   tags={"TravelOrders"},
+     *   security={{"bearerAuth":{}}},
+     *   @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *   @OA\Response(response=200, description="Detalhes do pedido"),
+     *   @OA\Response(response=404, description="Not found")
+     * )
+     */
     public function show($id)
     {
+
         $order = TravelOrder::where('user_id', auth()->id())
             ->findOrFail($id);
 
         return ApiResponse::success($order);
     }
 
+    /**
+     * @OA\Put(
+     *   path="/travel-orders/{id}",
+     *   summary="Atualizar pedido",
+     *   tags={"TravelOrders"},
+     *   security={{"bearerAuth":{}}},
+     *   @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *   @OA\RequestBody(@OA\MediaType(mediaType="application/json")),
+     *   @OA\Response(response=200, description="Pedido atualizado")
+     * )
+     */
     public function update(Request $request, $id)
     {
+
         $order = TravelOrder::where('user_id', auth()->id())
             ->findOrFail($id);
 
@@ -66,10 +118,22 @@ class TravelOrderController extends Controller
         return ApiResponse::success($order);
     }
 
+    /**
+     * @OA\Patch(
+     *   path="/travel-orders/{id}/status",
+     *   summary="Atualizar status do pedido",
+     *   tags={"TravelOrders"},
+     *   security={{"bearerAuth":{}}},
+     *   @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *   @OA\RequestBody(@OA\MediaType(mediaType="application/json")),
+     *   @OA\Response(response=200, description="Status atualizado"),
+     *   @OA\Response(response=403, description="Forbidden")
+     * )
+     */
     public function updateStatus(UpdateStatusRequest $request, $id)
     {
-        \Log::info('ENTROU NO updateStatus');
-            
+
+
         $order = TravelOrder::findOrFail($id);
 
         if (auth()->user()->role !== 'admin') {
@@ -94,8 +158,19 @@ class TravelOrderController extends Controller
         return ApiResponse::success($order);
     }
 
+    /**
+     * @OA\Delete(
+     *   path="/travel-orders/{id}",
+     *   summary="Remover pedido",
+     *   tags={"TravelOrders"},
+     *   security={{"bearerAuth":{}}},
+     *   @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *   @OA\Response(response=200, description="Pedido removido")
+     * )
+     */
     public function destroy($id)
     {
+
         $order = TravelOrder::where('user_id', auth()->id())
             ->findOrFail($id);
 
