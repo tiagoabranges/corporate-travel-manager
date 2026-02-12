@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 
 class TravelOrder extends Model
 {
@@ -16,12 +15,7 @@ class TravelOrder extends Model
         'destination',
         'departure_date',
         'return_date',
-        'status',
-    ];
-
-    protected $casts = [
-        'departure_date' => 'date',
-        'return_date' => 'date',
+        'status'
     ];
 
     public function user()
@@ -29,33 +23,24 @@ class TravelOrder extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function updateStatus(Request $request, $id)
-{
-    $request->validate([
-        'status' => 'required|in:approved,canceled'
-    ]);
+    public function scopeFilters($query, $filters = [])
+    {
+        if (!empty($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
 
-    $order = TravelOrder::findOrFail($id);
+        if (!empty($filters['destination'])) {
+            $query->where('destination', 'like', '%' . $filters['destination'] . '%');
+        }
 
-    if ($order->status === 'approved' && $request->status === 'canceled') {
-        return response()->json([
-            'message' => 'Approved orders cannot be canceled'
-        ], 422);
+        if (!empty($filters['start_date'])) {
+            $query->whereDate('departure_date', '>=', $filters['start_date']);
+        }
+
+        if (!empty($filters['end_date'])) {
+            $query->whereDate('return_date', '<=', $filters['end_date']);
+        }
+
+        return $query;
     }
-
-    $order->status = $request->status;
-    $order->save();
-
-    return response()->json([
-        'message' => 'Status updated successfully',
-        'data' => $order
-    ]);
-}
-
-public function show($id)
-{
-    $order = TravelOrder::findOrFail($id);
-
-    return response()->json($order);
-}
 }
