@@ -43,3 +43,20 @@ export const updateStatus = async (
 
   return response.data.data;
 };
+
+export const updateOrder = async (
+  id: number,
+  data: Partial<{
+    requester_name: string;
+    destination: string;
+    departure_date: string;
+    return_date: string;
+  }>
+) => {
+  const response = await api.put(`/travel-orders/${id}`, data);
+  return response.data.data;
+};
+
+export const deleteOrder = async (id: number) => {
+  await api.delete(`/travel-orders/${id}`);
+};

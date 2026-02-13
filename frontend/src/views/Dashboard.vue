@@ -26,6 +26,10 @@ onMounted(loadOrders);
 
     <hr />
 
-    <TravelOrderList :orders="orders" />
+   <TravelOrderList
+  :orders="orders"
+  @refresh="loadOrders"
+/>
+
   </div>
 </template>
