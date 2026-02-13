@@ -1,3 +1,5 @@
+export type OrderStatus = "requested" | "approved" | "cancelled";
+
 export interface TravelOrder {
   id: number;
   user_id: number;
@@ -5,5 +7,12 @@ export interface TravelOrder {
   destination: string;
   departure_date: string;
   return_date: string;
-  status: "requested" | "approved" | "cancelled";
+  status: OrderStatus;
+}
+
+export interface CreateTravelOrderDTO {
+  requester_name: string;
+  destination: string;
+  departure_date: string;
+  return_date: string;
 }
