@@ -36,9 +36,14 @@ const saveEdit = async (id: number) => {
 };
 
 const remove = async (id: number) => {
+  const confirmed = confirm("Deseja realmente excluir este pedido?");
+
+  if (!confirmed) return;
+
   await deleteOrder(id);
   emit("refresh");
 };
+
 </script>
 
 <template>
