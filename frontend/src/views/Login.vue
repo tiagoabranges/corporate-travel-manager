@@ -38,6 +38,11 @@ const handleLogin = async () => {
     <input v-model="email" placeholder="Email" />
     <input v-model="password" type="password" placeholder="Senha" />
     <button @click="handleLogin">Entrar</button>
+    <p>
+  Não tem conta?
+  <router-link to="/register">Cadastrar</router-link>
+</p>
+
     <p v-if="error">{{ error }}</p>
   </div>
 </template>
