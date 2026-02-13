@@ -1,15 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { getOrders } from "../api/travelOrders";
 import type { TravelOrder } from "../types/travelOrder";
 
-const orders = ref<TravelOrder[]>([]);
-
-const loadOrders = async () => {
-  orders.value = await getOrders();
-};
-
-onMounted(loadOrders);
+defineProps<{
+  orders: TravelOrder[];
+}>();
 </script>
 
 <template>
@@ -20,12 +14,17 @@ onMounted(loadOrders);
       Nenhum pedido encontrado.
     </div>
 
-    <div v-for="order in orders" :key="order.id">
+    <div
+      v-for="order in orders"
+      :key="order.id"
+      style="margin-bottom:10px; padding:8px; border:1px solid #ccc;"
+    >
+      <p><strong>Destino:</strong> {{ order.destination }}</p>
       <p>
-        <strong>{{ order.destination }}</strong> |
-        {{ order.departure_date }} → {{ order.return_date }} |
-        Status: {{ order.status }}
+        <strong>Período:</strong>
+        {{ order.departure_date }} → {{ order.return_date }}
       </p>
+      <p><strong>Status:</strong> {{ order.status }}</p>
     </div>
   </div>
 </template>

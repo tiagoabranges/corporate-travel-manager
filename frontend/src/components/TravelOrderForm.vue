@@ -3,6 +3,10 @@ import { ref } from "vue";
 import { createOrder } from "../api/travelOrders";
 import type { CreateTravelOrderDTO } from "../types/travelOrder";
 
+const emit = defineEmits<{
+  (e: "created"): void;
+}>();
+
 const requester_name = ref("");
 const destination = ref("");
 const departure_date = ref("");
@@ -29,6 +33,8 @@ const submit = async () => {
     destination.value = "";
     departure_date.value = "";
     return_date.value = "";
+
+    emit("created");
   } catch (err) {
     error.value = "Erro ao criar pedido.";
     success.value = "";
@@ -40,12 +46,14 @@ const submit = async () => {
   <div>
     <h3>Criar Pedido</h3>
 
-    <input v-model="requester_name" placeholder="Nome do solicitante" />
-    <input v-model="destination" placeholder="Destino" />
-    <input v-model="departure_date" type="date" />
-    <input v-model="return_date" type="date" />
+    <div style="display:flex; flex-direction:column; gap:8px; max-width:300px;">
+      <input v-model="requester_name" placeholder="Nome do solicitante" />
+      <input v-model="destination" placeholder="Destino" />
+      <input v-model="departure_date" type="date" />
+      <input v-model="return_date" type="date" />
 
-    <button @click="submit">Criar</button>
+      <button @click="submit">Criar</button>
+    </div>
 
     <p v-if="success" style="color:green">{{ success }}</p>
     <p v-if="error" style="color:red">{{ error }}</p>
