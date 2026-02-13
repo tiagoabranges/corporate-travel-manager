@@ -162,8 +162,39 @@
                 "summary": "Criar pedido de viagem",
                 "operationId": "3c6f3eac075e217221019dcd1945c0d3",
                 "requestBody": {
+                    "required": true,
                     "content": {
-                        "application/json": {}
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "requester_name",
+                                    "destination",
+                                    "departure_date",
+                                    "return_date"
+                                ],
+                                "properties": {
+                                    "requester_name": {
+                                        "type": "string",
+                                        "example": "João Silva"
+                                    },
+                                    "destination": {
+                                        "type": "string",
+                                        "example": "Nova York"
+                                    },
+                                    "departure_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-07-10"
+                                    },
+                                    "return_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-07-20"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
                     }
                 },
                 "responses": {
@@ -226,8 +257,33 @@
                     }
                 ],
                 "requestBody": {
+                    "required": true,
                     "content": {
-                        "application/json": {}
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "requester_name": {
+                                        "type": "string",
+                                        "example": "João Silva"
+                                    },
+                                    "destination": {
+                                        "type": "string",
+                                        "example": "Paris"
+                                    },
+                                    "departure_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-07-10"
+                                    },
+                                    "return_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-07-20"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
                     }
                 },
                 "responses": {
@@ -287,8 +343,26 @@
                     }
                 ],
                 "requestBody": {
+                    "required": true,
                     "content": {
-                        "application/json": {}
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "status"
+                                ],
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "approved",
+                                            "cancelled"
+                                        ],
+                                        "example": "approved"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
                     }
                 },
                 "responses": {

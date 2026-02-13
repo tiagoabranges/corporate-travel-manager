@@ -53,10 +53,22 @@ class TravelOrderController extends Controller
      *   summary="Criar pedido de viagem",
      *   tags={"TravelOrders"},
      *   security={{"bearerAuth":{}}},
-     *   @OA\RequestBody(@OA\MediaType(mediaType="application/json")),
+     *
+     *   @OA\RequestBody(
+     *     required=true,
+     *     @OA\JsonContent(
+     *       required={"requester_name","destination","departure_date","return_date"},
+     *       @OA\Property(property="requester_name", type="string", example="João Silva"),
+     *       @OA\Property(property="destination", type="string", example="Nova York"),
+     *       @OA\Property(property="departure_date", type="string", format="date", example="2025-07-10"),
+     *       @OA\Property(property="return_date", type="string", format="date", example="2025-07-20")
+     *     )
+     *   ),
+     *
      *   @OA\Response(response=201, description="Pedido criado")
      * )
      */
+
     public function store(StoreTravelOrderRequest $request)
     {
 
@@ -89,17 +101,34 @@ class TravelOrderController extends Controller
         return ApiResponse::success($order);
     }
 
-    /**
-     * @OA\Put(
-     *   path="/travel-orders/{id}",
-     *   summary="Atualizar pedido",
-     *   tags={"TravelOrders"},
-     *   security={{"bearerAuth":{}}},
-     *   @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *   @OA\RequestBody(@OA\MediaType(mediaType="application/json")),
-     *   @OA\Response(response=200, description="Pedido atualizado")
-     * )
-     */
+ /**
+ * @OA\Put(
+ *   path="/travel-orders/{id}",
+ *   summary="Atualizar pedido",
+ *   tags={"TravelOrders"},
+ *   security={{"bearerAuth":{}}},
+ *
+ *   @OA\Parameter(
+ *     name="id",
+ *     in="path",
+ *     required=true,
+ *     @OA\Schema(type="integer")
+ *   ),
+ *
+ *   @OA\RequestBody(
+ *     required=true,
+ *     @OA\JsonContent(
+ *       @OA\Property(property="requester_name", type="string", example="João Silva"),
+ *       @OA\Property(property="destination", type="string", example="Paris"),
+ *       @OA\Property(property="departure_date", type="string", format="date", example="2025-07-10"),
+ *       @OA\Property(property="return_date", type="string", format="date", example="2025-07-20")
+ *     )
+ *   ),
+ *
+ *   @OA\Response(response=200, description="Pedido atualizado")
+ * )
+ */
+
     public function update(Request $request, $id)
     {
 
@@ -117,19 +146,38 @@ class TravelOrderController extends Controller
 
         return ApiResponse::success($order);
     }
+/**
+ * @OA\Patch(
+ *   path="/travel-orders/{id}/status",
+ *   summary="Atualizar status do pedido",
+ *   tags={"TravelOrders"},
+ *   security={{"bearerAuth":{}}},
+ *
+ *   @OA\Parameter(
+ *     name="id",
+ *     in="path",
+ *     required=true,
+ *     @OA\Schema(type="integer")
+ *   ),
+ *
+ *   @OA\RequestBody(
+ *     required=true,
+ *     @OA\JsonContent(
+ *       required={"status"},
+ *       @OA\Property(
+ *         property="status",
+ *         type="string",
+ *         example="approved",
+ *         enum={"approved","cancelled"}
+ *       )
+ *     )
+ *   ),
+ *
+ *   @OA\Response(response=200, description="Status atualizado"),
+ *   @OA\Response(response=403, description="Forbidden")
+ * )
+ */
 
-    /**
-     * @OA\Patch(
-     *   path="/travel-orders/{id}/status",
-     *   summary="Atualizar status do pedido",
-     *   tags={"TravelOrders"},
-     *   security={{"bearerAuth":{}}},
-     *   @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *   @OA\RequestBody(@OA\MediaType(mediaType="application/json")),
-     *   @OA\Response(response=200, description="Status atualizado"),
-     *   @OA\Response(response=403, description="Forbidden")
-     * )
-     */
     public function updateStatus(UpdateStatusRequest $request, $id)
     {
 
