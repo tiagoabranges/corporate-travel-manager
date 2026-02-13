@@ -86,8 +86,12 @@ class Handler extends ExceptionHandler
 
             return response()->json([
                 'success' => false,
-                'message' => 'Erro interno no servidor',
-                'code' => 'INTERNAL_ERROR'
+                'message' => $e->getMessage(),
+                'code' => 'INTERNAL_ERROR',
+                'exception' => get_class($e),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
             ], 500);
         }
 
