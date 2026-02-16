@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import type { User } from "../types/user";
 
-const user = JSON.parse(localStorage.getItem("user") || "{}");
+const user = JSON.parse(localStorage.getItem("user") || "{}") as User;
+
+
 
 const name = ref(user?.name || "");
 const email = ref(user?.email || "");
