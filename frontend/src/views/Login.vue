@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import AuthLayout from "../layouts/AuthLayout.vue";
+
 import axios from "axios";
 
 const router = useRouter();
@@ -33,16 +35,48 @@ const handleLogin = async () => {
 </script>
 
 <template>
-  <div>
-    <h2>Login</h2>
-    <input v-model="email" placeholder="Email" />
-    <input v-model="password" type="password" placeholder="Senha" />
-    <button @click="handleLogin">Entrar</button>
-    <p>
-  Não tem conta?
-  <router-link to="/register">Cadastrar</router-link>
-</p>
+  <AuthLayout>
+    <div class="bg-white shadow-xl rounded-2xl p-8">
+      <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
+        Travel Manager
+      </h2>
 
-    <p v-if="error">{{ error }}</p>
-  </div>
+      <div class="flex flex-col gap-4">
+        <input
+          v-model="email"
+          type="email"
+          placeholder="Email"
+          class="input"
+        />
+
+        <input
+          v-model="password"
+          type="password"
+          placeholder="Senha"
+          class="input"
+        />
+
+        <button
+          @click="handleLogin"
+          class="btn-primary"
+        >
+          Entrar
+        </button>
+      </div>
+
+      <p v-if="error" class="text-red-600 text-sm mt-3">
+        {{ error }}
+      </p>
+
+      <div class="text-center mt-6 text-sm text-gray-500">
+        Não tem conta?
+        <router-link
+          to="/register"
+          class="text-blue-600 hover:underline"
+        >
+          Criar conta
+        </router-link>
+      </div>
+    </div>
+  </AuthLayout>
 </template>
