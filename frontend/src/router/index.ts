@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Dashboard from "../views/Dashboard.vue";
+import Profile from "../views/Profile.vue";
+import MainLayout from "../layouts/MainLayout.vue";
 
 const routes = [
   {
@@ -14,13 +16,27 @@ const routes = [
     name: "Register",
     component: Register,
   },
+
+  // 🔥 Rotas protegidas com layout
   {
-    path: "/dashboard",
-    name: "Dashboard",
-    component: Dashboard,
+    path: "/",
+    component: MainLayout,
     meta: { requiresAuth: true },
+    children: [
+      {
+        path: "dashboard",
+        name: "Dashboard",
+        component: Dashboard,
+      },
+      {
+        path: "profile",
+        name: "Profile",
+        component: Profile,
+      },
+    ],
   },
 ];
+
 
 const router = createRouter({
   history: createWebHistory(),

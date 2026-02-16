@@ -39,6 +39,7 @@ class TravelOrderController extends Controller
         }
 
         $orders = $query
+            ->with('user:id,name')
             ->filters($request->all())
             ->latest()
             ->paginate(10);
@@ -101,33 +102,33 @@ class TravelOrderController extends Controller
         return ApiResponse::success($order);
     }
 
- /**
- * @OA\Put(
- *   path="/travel-orders/{id}",
- *   summary="Atualizar pedido",
- *   tags={"TravelOrders"},
- *   security={{"bearerAuth":{}}},
- *
- *   @OA\Parameter(
- *     name="id",
- *     in="path",
- *     required=true,
- *     @OA\Schema(type="integer")
- *   ),
- *
- *   @OA\RequestBody(
- *     required=true,
- *     @OA\JsonContent(
- *       @OA\Property(property="requester_name", type="string", example="João Silva"),
- *       @OA\Property(property="destination", type="string", example="Paris"),
- *       @OA\Property(property="departure_date", type="string", format="date", example="2025-07-10"),
- *       @OA\Property(property="return_date", type="string", format="date", example="2025-07-20")
- *     )
- *   ),
- *
- *   @OA\Response(response=200, description="Pedido atualizado")
- * )
- */
+    /**
+     * @OA\Put(
+     *   path="/travel-orders/{id}",
+     *   summary="Atualizar pedido",
+     *   tags={"TravelOrders"},
+     *   security={{"bearerAuth":{}}},
+     *
+     *   @OA\Parameter(
+     *     name="id",
+     *     in="path",
+     *     required=true,
+     *     @OA\Schema(type="integer")
+     *   ),
+     *
+     *   @OA\RequestBody(
+     *     required=true,
+     *     @OA\JsonContent(
+     *       @OA\Property(property="requester_name", type="string", example="João Silva"),
+     *       @OA\Property(property="destination", type="string", example="Paris"),
+     *       @OA\Property(property="departure_date", type="string", format="date", example="2025-07-10"),
+     *       @OA\Property(property="return_date", type="string", format="date", example="2025-07-20")
+     *     )
+     *   ),
+     *
+     *   @OA\Response(response=200, description="Pedido atualizado")
+     * )
+     */
 
     public function update(Request $request, $id)
     {
@@ -146,37 +147,37 @@ class TravelOrderController extends Controller
 
         return ApiResponse::success($order);
     }
-/**
- * @OA\Patch(
- *   path="/travel-orders/{id}/status",
- *   summary="Atualizar status do pedido",
- *   tags={"TravelOrders"},
- *   security={{"bearerAuth":{}}},
- *
- *   @OA\Parameter(
- *     name="id",
- *     in="path",
- *     required=true,
- *     @OA\Schema(type="integer")
- *   ),
- *
- *   @OA\RequestBody(
- *     required=true,
- *     @OA\JsonContent(
- *       required={"status"},
- *       @OA\Property(
- *         property="status",
- *         type="string",
- *         example="approved",
- *         enum={"approved","cancelled"}
- *       )
- *     )
- *   ),
- *
- *   @OA\Response(response=200, description="Status atualizado"),
- *   @OA\Response(response=403, description="Forbidden")
- * )
- */
+    /**
+     * @OA\Patch(
+     *   path="/travel-orders/{id}/status",
+     *   summary="Atualizar status do pedido",
+     *   tags={"TravelOrders"},
+     *   security={{"bearerAuth":{}}},
+     *
+     *   @OA\Parameter(
+     *     name="id",
+     *     in="path",
+     *     required=true,
+     *     @OA\Schema(type="integer")
+     *   ),
+     *
+     *   @OA\RequestBody(
+     *     required=true,
+     *     @OA\JsonContent(
+     *       required={"status"},
+     *       @OA\Property(
+     *         property="status",
+     *         type="string",
+     *         example="approved",
+     *         enum={"approved","cancelled"}
+     *       )
+     *     )
+     *   ),
+     *
+     *   @OA\Response(response=200, description="Status atualizado"),
+     *   @OA\Response(response=403, description="Forbidden")
+     * )
+     */
 
     public function updateStatus(UpdateStatusRequest $request, $id)
     {
@@ -188,9 +189,23 @@ class TravelOrderController extends Controller
             return ApiResponse::error('Apenas administradores podem alterar status', StatusCode::FORBIDDEN);
         }
 
-        if ($order->status === 'approved' && $request->status === 'cancelled') {
-            return ApiResponse::error('Pedido já aprovado não pode ser cancelado', StatusCode::UNPROCESSABLE_ENTITY);
+        $current = $order->status;
+        $new = $request->status;
+
+        if ($current !== 'requested') {
+            return ApiResponse::error(
+                'Apenas pedidos com status "requested" podem ser alterados.',
+                StatusCode::UNPROCESSABLE_ENTITY
+            );
         }
+
+        if (!in_array($new, ['approved', 'cancelled'])) {
+            return ApiResponse::error(
+                'Status inválido.',
+                StatusCode::UNPROCESSABLE_ENTITY
+            );
+        }
+
 
         $order->update([
             'status' => $request->status
