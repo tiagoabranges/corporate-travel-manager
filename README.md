@@ -288,4 +288,6 @@ corporate-travel-manager/
 Tiago Abranges  
 Full Stack Developer  
 
-Este projeto foi desenvolvido como parte de um desafio técnico e como demonstração de capacidade de arquitetura, organização e implementação de regras de negócio reais em uma aplicação Full Stack.
+Este projeto foi desenvolvido com o objetivo de treinar tomada de decisão arquitetural, organização de código e aplicação de boas práticas em um cenário próximo ao mundo real.
+
+A proposta foi simular uma aplicação corporativa completa, trabalhando desde a modelagem de regras de negócio até autenticação, controle de acesso por papéis, testes automatizados e containerização com Docker.
