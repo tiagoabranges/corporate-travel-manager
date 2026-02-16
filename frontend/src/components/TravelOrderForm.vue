@@ -43,10 +43,12 @@ const submit = async () => {
 </script>
 
 <template>
-  <div class="bg-white shadow-md rounded-xl p-6 w-full max-w-md">
-    <h3 class="text-xl font-semibold mb-4 text-gray-800">
-      Criar Pedido
-    </h3>
+ <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+
+  <h3 class="text-lg font-semibold mb-4 text-gray-800">
+  Criar novo pedido
+</h3>
+
 
     <div class="flex flex-col gap-3">
       <input

@@ -98,81 +98,47 @@ const changeStatus = async (order: TravelOrder) => {
       Nenhum pedido encontrado.
     </div>
 
-    <div
-      v-for="order in orders"
-      :key="order.id"
-      class="bg-white shadow rounded-xl p-4 mb-4 border border-gray-100"
-    >
-      <!-- VISUALIZAÇÃO -->
-      <div v-if="editingId !== order.id">
-        <p class="text-gray-700">
-          <span class="font-semibold">Destino:</span>
-          {{ order.destination }}
-        </p>
+ <div
+  v-for="order in orders"
+  :key="order.id"
+  class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-4 hover:shadow-md transition"
+>
+  <div class="flex justify-between items-start">
+    <div>
+      <h3 class="text-lg font-semibold text-gray-800">
+        {{ order.destination }}
+      </h3>
 
-        <p class="text-gray-700">
-          <span class="font-semibold">Período:</span>
-          {{ order.departure_date }} → {{ order.return_date }}
-        </p>
-
-        <p class="text-gray-700">
-          <span class="font-semibold">Status:</span>
-          {{ statusMap[order.status] || order.status }}
-        </p>
-
-        <div class="flex gap-2 mt-3">
-          <button @click="startEdit(order)" class="btn-secondary">
-            Editar
-          </button>
-
-          <button @click="remove(order.id)" class="btn-danger">
-            Deletar
-          </button>
-        </div>
-
-        <!-- ADMIN -->
-        <div v-if="isAdmin" class="mt-4 flex items-center gap-2">
-          <select
-            v-model="statusEdit[order.id]"
-            :disabled="order.status === 'approved'"
-            class="input"
-          >
-            <option value="" disabled>Alterar status</option>
-            <option value="approved">Aprovar</option>
-            <option value="cancelled">Cancelar</option>
-          </select>
-
-          <button
-            @click="changeStatus(order)"
-            class="btn-primary"
-            :disabled="
-              order.status === 'approved' ||
-              !statusEdit[order.id] ||
-              statusEdit[order.id] === order.status
-            "
-          >
-            Salvar Status
-          </button>
-        </div>
-      </div>
-
-      <!-- EDIÇÃO -->
-      <div v-else class="flex flex-col gap-2">
-        <input v-model="editData.requester_name" class="input" />
-        <input v-model="editData.destination" class="input" />
-        <input v-model="editData.departure_date" type="date" class="input" />
-        <input v-model="editData.return_date" type="date" class="input" />
-
-        <div class="flex gap-2 mt-2">
-          <button @click="saveEdit(order.id)" class="btn-primary">
-            Salvar
-          </button>
-          <button @click="cancelEdit" class="btn-secondary">
-            Cancelar
-          </button>
-        </div>
-      </div>
+      <p class="text-sm text-gray-500 mt-1">
+        {{ order.departure_date }} → {{ order.return_date }}
+      </p>
     </div>
+
+    <span
+      :class="[
+        'text-xs font-medium px-3 py-1 rounded-full',
+        order.status === 'approved'
+          ? 'bg-green-100 text-green-700'
+          : order.status === 'cancelled'
+          ? 'bg-red-100 text-red-700'
+          : 'bg-yellow-100 text-yellow-700'
+      ]"
+    >
+      {{ statusMap[order.status] }}
+    </span>
+  </div>
+
+  <div class="flex gap-3 mt-6">
+    <button @click="startEdit(order)" class="btn-secondary">
+      Editar
+    </button>
+
+    <button @click="remove(order.id)" class="btn-danger">
+      Deletar
+    </button>
+  </div>
+</div>
+
   </div>
 </template>
 
