@@ -85,54 +85,66 @@ const changeStatus = async (order: TravelOrder) => {
   emit("refresh");
 };
 </script>
-
 <template>
-  <div>
-    <h3>Pedidos</h3>
+  <div class="mt-8">
+    <h3 class="text-xl font-semibold mb-4 text-gray-800">
+      Pedidos
+    </h3>
 
-    <div v-if="orders.length === 0">Nenhum pedido encontrado.</div>
+    <div
+      v-if="orders.length === 0"
+      class="text-gray-500"
+    >
+      Nenhum pedido encontrado.
+    </div>
 
     <div
       v-for="order in orders"
       :key="order.id"
-      style="margin-bottom: 12px; padding: 10px; border: 1px solid #ccc"
+      class="bg-white shadow rounded-xl p-4 mb-4 border border-gray-100"
     >
       <!-- VISUALIZAÇÃO -->
       <div v-if="editingId !== order.id">
-        <p><strong>Destino:</strong> {{ order.destination }}</p>
-        <p>
-          <strong>Período:</strong>
+        <p class="text-gray-700">
+          <span class="font-semibold">Destino:</span>
+          {{ order.destination }}
+        </p>
+
+        <p class="text-gray-700">
+          <span class="font-semibold">Período:</span>
           {{ order.departure_date }} → {{ order.return_date }}
         </p>
-        <p>
-          <strong>Status:</strong>
+
+        <p class="text-gray-700">
+          <span class="font-semibold">Status:</span>
           {{ statusMap[order.status] || order.status }}
         </p>
 
-        <button @click="startEdit(order)">Editar</button>
-        <button @click="remove(order.id)">Deletar</button>
+        <div class="flex gap-2 mt-3">
+          <button @click="startEdit(order)" class="btn-secondary">
+            Editar
+          </button>
+
+          <button @click="remove(order.id)" class="btn-danger">
+            Deletar
+          </button>
+        </div>
 
         <!-- ADMIN -->
-        <div v-if="isAdmin" style="margin-top: 8px">
+        <div v-if="isAdmin" class="mt-4 flex items-center gap-2">
           <select
             v-model="statusEdit[order.id]"
             :disabled="order.status === 'approved'"
+            class="input"
           >
-            <!-- placeholder -->
             <option value="" disabled>Alterar status</option>
-
-            <!-- opções válidas -->
-            <option value="approved" :disabled="order.status === 'approved'">
-              Aprovar
-            </option>
-
-            <option value="cancelled" :disabled="order.status === 'cancelled'">
-              Cancelar
-            </option>
+            <option value="approved">Aprovar</option>
+            <option value="cancelled">Cancelar</option>
           </select>
 
           <button
             @click="changeStatus(order)"
+            class="btn-primary"
             :disabled="
               order.status === 'approved' ||
               !statusEdit[order.id] ||
@@ -145,15 +157,22 @@ const changeStatus = async (order: TravelOrder) => {
       </div>
 
       <!-- EDIÇÃO -->
-      <div v-else>
-        <input v-model="editData.requester_name" />
-        <input v-model="editData.destination" />
-        <input v-model="editData.departure_date" type="date" />
-        <input v-model="editData.return_date" type="date" />
+      <div v-else class="flex flex-col gap-2">
+        <input v-model="editData.requester_name" class="input" />
+        <input v-model="editData.destination" class="input" />
+        <input v-model="editData.departure_date" type="date" class="input" />
+        <input v-model="editData.return_date" type="date" class="input" />
 
-        <button @click="saveEdit(order.id)">Salvar</button>
-        <button @click="cancelEdit">Cancelar</button>
+        <div class="flex gap-2 mt-2">
+          <button @click="saveEdit(order.id)" class="btn-primary">
+            Salvar
+          </button>
+          <button @click="cancelEdit" class="btn-secondary">
+            Cancelar
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </template>
+

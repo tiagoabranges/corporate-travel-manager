@@ -43,19 +43,50 @@ const submit = async () => {
 </script>
 
 <template>
-  <div>
-    <h3>Criar Pedido</h3>
+  <div class="bg-white shadow-md rounded-xl p-6 w-full max-w-md">
+    <h3 class="text-xl font-semibold mb-4 text-gray-800">
+      Criar Pedido
+    </h3>
 
-    <div style="display:flex; flex-direction:column; gap:8px; max-width:300px;">
-      <input v-model="requester_name" placeholder="Nome do solicitante" />
-      <input v-model="destination" placeholder="Destino" />
-      <input v-model="departure_date" type="date" />
-      <input v-model="return_date" type="date" />
+    <div class="flex flex-col gap-3">
+      <input
+        v-model="requester_name"
+        placeholder="Nome do solicitante"
+        class="input"
+      />
 
-      <button @click="submit">Criar</button>
+      <input
+        v-model="destination"
+        placeholder="Destino"
+        class="input"
+      />
+
+      <input
+        v-model="departure_date"
+        type="date"
+        class="input"
+      />
+
+      <input
+        v-model="return_date"
+        type="date"
+        class="input"
+      />
+
+      <button
+        @click="submit"
+        class="btn-primary mt-2"
+      >
+        Criar
+      </button>
     </div>
 
-    <p v-if="success" style="color:green">{{ success }}</p>
-    <p v-if="error" style="color:red">{{ error }}</p>
+    <p v-if="success" class="text-green-600 mt-3 text-sm">
+      {{ success }}
+    </p>
+
+    <p v-if="error" class="text-red-600 mt-3 text-sm">
+      {{ error }}
+    </p>
   </div>
 </template>
