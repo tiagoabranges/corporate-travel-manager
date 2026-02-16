@@ -102,18 +102,6 @@ cd corporate-travel-manager
 docker compose up -d --build
 ```
 
-## 3️⃣ Gere a chave da aplicação
-
-```bash
-docker compose exec backend php artisan key:generate
-```
-
-## 4️⃣ Rode as migrations
-
-```bash
-docker compose exec backend php artisan migrate
-```
-
 ## 5️⃣ Acesse o sistema
 
 ### 🌐 Frontend
