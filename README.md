@@ -2,8 +2,6 @@
 
 Sistema Full Stack para gerenciamento de pedidos de viagem corporativa.
 
-Desenvolvido como desafio técnico com foco em:
-
 - Arquitetura limpa
 - Regras de negócio bem definidas
 - Controle de acesso por papel (admin / usuário)
@@ -94,7 +92,7 @@ O projeto roda completamente via Docker.
 ## 1️⃣ Clone o repositório
 
 ```bash
-git clone https://github.com/seuusuario/corporate-travel-manager.git
+git clone git@github.com:tiagoabranges/corporate-travel-manager.git
 cd corporate-travel-manager
 ```
 
