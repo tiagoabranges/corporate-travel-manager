@@ -20,4 +20,4 @@ php artisan l5-swagger:generate
 
 echo "✅ Aplicação pronta!"
 
-php-fpm
+php artisan serve --host=0.0.0.0 --port=8000

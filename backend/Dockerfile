@@ -30,8 +30,4 @@ RUN chmod +x /start.sh
 RUN addgroup -g 1000 app && adduser -G app -g app -s /bin/sh -D app -u 1000 \
   && chown -R app:app /var/www
 
-RUN docker-php-ext-install pdo_sqlite
-
 EXPOSE 8000
-
-CMD ["/start.sh"]

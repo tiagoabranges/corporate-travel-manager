@@ -2,7 +2,6 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Mantém compatível com watchers em linux
 ENV CHOKIDAR_USEPOLLING=true
 ENV WATCHPACK_POLLING=true
 
